@@ -1,0 +1,35 @@
+# -----------------------------------------------------------------------------
+# Gateway LiteLLM: los agentes SOLO conocen http://localhost:4000/v1 y dos nombres:
+#   razonamiento → Requerimientos, Arquitecto, Líder de desarrollo
+#   codigo       → Desarrollador, QA
+# Cambiar de GPU arrendada a local = cambiar gateway/.env (lo hacen los scripts).
+# -----------------------------------------------------------------------------
+model_list:
+  - model_name: razonamiento
+    litellm_params:
+      model: openai/razonamiento            # = --served-model-name en vLLM
+      api_base: os.environ/RAZONAMIENTO_BASE_URL
+      api_key: os.environ/VLLM_API_KEY
+      timeout: 600
+
+  - model_name: codigo
+    litellm_params:
+      model: openai/codigo
+      api_base: os.environ/CODIGO_BASE_URL
+      api_key: os.environ/VLLM_API_KEY
+      timeout: 600
+
+  # --- Fallback opcional en la nube (para escalamientos de QA) ---------------
+  # - model_name: escalamiento
+  #   litellm_params:
+  #     model: anthropic/<modelo>
+  #     api_key: os.environ/ANTHROPIC_API_KEY
+
+litellm_settings:
+  drop_params: true          # ignora parámetros que vLLM no soporte
+  num_retries: 2
+  request_timeout: 600
+  # fallbacks: [{"codigo": ["escalamiento"]}]   # descomentar junto con el bloque de arriba
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

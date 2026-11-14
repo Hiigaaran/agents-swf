@@ -1,0 +1,14 @@
+{
+  "id": "codigo_validar_rut",
+  "rol": "Desarrollador + QA",
+  "model": "codigo",
+  "tipo": "code",
+  "max_tokens": 4096,
+  "messages": [
+    {"role": "system", "content": "Eres el agente Desarrollador. Entregas solo código Python en un único bloque ```python```."},
+    {"role": "user", "content": "Implementa `validar_rut(rut: str) -> bool` que valide un RUT chileno con dígito verificador (módulo 11). Debe aceptar formatos con y sin puntos, con guion, y 'k' o 'K' como dígito verificador. Retorna False ante entradas mal formadas, sin lanzar excepciones."}
+  ],
+  "check": {
+    "test": "assert validar_rut('12.345.678-5')\nassert validar_rut('12345678-5')\nassert validar_rut('11.111.111-1')\nassert validar_rut('7654321-6')\nassert not validar_rut('7654321-5')\nassert not validar_rut('12.345.678-9')\nassert not validar_rut('abc')\nassert not validar_rut('')\nprint('TESTS OK')"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "tool_call_basico",
+  "rol": "Desarrollador",
+  "model": "codigo",
+  "tipo": "tool_call",
+  "max_tokens": 1024,
+  "messages": [
+    {"role": "system", "content": "Eres el agente Desarrollador. Usa herramientas para leer archivos antes de actuar."},
+    {"role": "user", "content": "Antes de implementar, lee la especificación specs/AC-001.md."}
+  ],
+  "tools": [
+    {"type": "function", "function": {
+      "name": "leer_archivo",
+      "description": "Lee un archivo del repositorio",
+      "parameters": {"type": "object", "properties": {"path": {"type": "string"}}, "required": ["path"]}
+    }}
+  ],
+  "check": {"tool": "leer_archivo", "arg_contains": {"path": "AC-001"}}
+}
