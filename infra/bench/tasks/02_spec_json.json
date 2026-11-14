@@ -1,0 +1,12 @@
+{
+  "id": "spec_desde_requerimiento",
+  "rol": "Líder de desarrollo",
+  "model": "razonamiento",
+  "tipo": "json",
+  "max_tokens": 6144,
+  "messages": [
+    {"role": "system", "content": "Eres el Líder de desarrollo. Conviertes requerimientos en specs implementables. Respondes SOLO con un objeto JSON válido, sin texto adicional."},
+    {"role": "user", "content": "Requerimiento REQ-12: 'Como administrador quiero desactivar usuarios sin borrarlos, para conservar su historial.' Stack definido por el Arquitecto: API REST en Python (FastAPI) + PostgreSQL. Genera el spec con las claves: id, titulo, criterios_aceptacion (lista de objetos con id tipo 'AC-xxx' y descripcion), cambios_bd (lista), endpoints (lista), definition_of_done (lista)."}
+  ],
+  "check": {"json_keys": ["id", "titulo", "criterios_aceptacion", "cambios_bd", "endpoints", "definition_of_done"], "min_items": {"criterios_aceptacion": 3}}
+}

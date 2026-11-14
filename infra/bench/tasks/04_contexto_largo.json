@@ -1,0 +1,11 @@
+{
+  "id": "contexto_largo_prefill",
+  "rol": "QA (relee specs + ADRs)",
+  "model": "razonamiento",
+  "tipo": "needle",
+  "max_tokens": 2048,
+  "filler_tokens": 20000,
+  "needle": "ADR-031: el servicio de pagos expone su API interna en el puerto 7443 y solo acepta mTLS.",
+  "question": "Según los ADRs anteriores, ¿en qué puerto expone su API interna el servicio de pagos? Responde solo el número.",
+  "check": {"contains": "7443"}
+}

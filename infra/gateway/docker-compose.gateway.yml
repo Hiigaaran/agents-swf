@@ -1,0 +1,23 @@
+# Gateway que corre en TU máquina en todas las fases.
+#   docker network create fabrica      # una sola vez
+#   docker compose -f gateway/docker-compose.gateway.yml up -d
+# gateway/.env lo generan scripts/runpod-up.sh (arriendo) o scripts/use-local.sh (local).
+services:
+  litellm:
+    image: ${LITELLM_IMAGE:-ghcr.io/berriai/litellm:main-stable}
+    container_name: fabrica-gateway
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    env_file:
+      - ./.env
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml:ro
+    ports:
+      - "127.0.0.1:4000:4000"
+    networks: [fabrica]          # misma red que vLLM local (Fase 2/3)
+    # Con Tailscale, el contenedor usa la red del host para resolver la IP del pod.
+    # En Linux, si no alcanza la IP 100.x.y.z, usa: network_mode: host (y quita ports y networks)
+    restart: unless-stopped
+
+networks:
+  fabrica:
+    external: true

@@ -1,0 +1,41 @@
+# -----------------------------------------------------------------------------
+# Fase 2/3 (local): el MISMO serve.sh y la MISMA imagen que en el arriendo.
+#
+#   cp inference/profiles/poc-24gb.env inference/local.env   # o el perfil que uses
+#   docker network create fabrica            # una sola vez
+#   docker compose -f inference/docker-compose.inference.yml --env-file .env up -d
+#   ./scripts/use-local.sh inference/local.env
+# -----------------------------------------------------------------------------
+services:
+  vllm:
+    image: ${VLLM_IMAGE:-vllm/vllm-openai:latest}
+    container_name: fabrica-vllm
+    entrypoint: ["bash", "/opt/fabrica/serve.sh"]
+    env_file:
+      - ./local.env
+    environment:
+      VLLM_API_KEY: ${VLLM_API_KEY:?Define VLLM_API_KEY en .env}
+      HF_TOKEN: ${HF_TOKEN:-}
+      TUNNEL_MODE: none
+      HF_HOME: /workspace/hf-cache
+      METRICS_DIR: /workspace/metrics
+    volumes:
+      - ./serve.sh:/opt/fabrica/serve.sh:ro
+      - ${LOCAL_WORKSPACE:-~/.cache/fabrica}:/workspace
+    ports:
+      - "127.0.0.1:8000:8000"   # solo localhost (para pruebas con curl)
+      - "127.0.0.1:8001:8001"
+    networks: [fabrica]          # el gateway llega por http://fabrica-vllm:8000
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+networks:
+  fabrica:
+    external: true
